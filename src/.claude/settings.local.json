@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat ~/.claude/settings.local.json 2>/dev/null)",
+      "Read(//home/xiangcong/.claude/**)",
+      "Bash(find /home/xiangcong -maxdepth 5 -type f \\\\\\( -name \"*.py\" -o -name \"*.yaml\" -o -name \"*.yml\" -o -name \"*.json\" -o -name \"*.ini\" -o -name \"*.sh\" -o -name \"*.bash\" -o -name \"*.md\" -o -name \"*.txt\" \\\\\\) 2>/dev/null | head -2000)",
+      "Read(//home/xiangcong/**)",
+      "Bash(colcon build *)"
+    ]
+  }
+}
