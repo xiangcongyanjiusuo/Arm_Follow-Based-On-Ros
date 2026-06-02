@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python" alt="Python 3.12">
 </p>
 
-# Arm Catch Box
+# Arm_Follow-Based-On-Ros
 
 基于 ROS2 Jazzy 的眼在手外机械臂视觉抓取系统。摄像头俯拍桌面，HSV 颜色检测识别目标，转换世界坐标后通过逆运动学解算关节角度，驱动 6 轴舵机机械臂完成抓取。
 
