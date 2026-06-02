@@ -219,12 +219,19 @@ class ArmJointNode(Node):
         return all_ok
 
     def _disable_all(self):
-        """失能全部舵机."""
+        """失能全部舵机, 带延时和重试, 确保退出时所有电机卸力."""
         for servo_id in self.servo_ids:
-            if self.controller.disable_torque(servo_id):
-                self.torque_enabled[servo_id] = False
-            else:
-                self.get_logger().warn(f'Servo {servo_id}: Failed to disable torque')
+            success = False
+            for attempt in range(3):
+                if self.controller.disable_torque(servo_id):
+                    self.torque_enabled[servo_id] = False
+                    success = True
+                    break
+                time.sleep(0.02)
+            if not success:
+                self.get_logger().warn(
+                    f'Servo {servo_id}: Failed to disable torque after 3 attempts')
+            time.sleep(0.05)  # 舵机间延时, 确保每帧都被处理
 
     def joint_command_callback(self, msg):
         if len(msg.angles) != len(self.servo_ids):
@@ -284,7 +291,8 @@ class ArmJointNode(Node):
 
     def destroy_node(self):
         self.get_logger().info('Shutting down arm joint node...')
-        self._disable_all()
+        if hasattr(self, 'controller') and self.controller.serial_port and self.controller.serial_port.is_open:
+            self._disable_all()
         if hasattr(self, 'controller'):
             self.controller.close()
         super().destroy_node()
